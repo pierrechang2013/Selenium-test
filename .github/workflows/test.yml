@@ -38,4 +38,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: target/surefire-reports/   # Maven 默认 JUnit 报告路径
+          path: target/surefire-reports/**/*.xml
