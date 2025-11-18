@@ -1,10 +1,18 @@
 package org.example.selenium.day17;
 
-import org.junit.jupiter.api.*;
+import io.qameta.allure.Allure;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.ByteArrayInputStream;
 import java.time.Duration;
 
 /**
@@ -32,6 +40,7 @@ public class BaseTest {
 
     @AfterEach
     public void finish(){
+//        attachScreenshotOnFailure(); // 每次测试后执行
         if(webDriver!=null)
         webDriver.quit();
     }
@@ -45,5 +54,18 @@ public class BaseTest {
         wait = new WebDriverWait(webDriver,Duration.ofSeconds(10));
         return wait;
 
+    }
+
+    public void attachScreenshotOnFailure() {
+        if (webDriver != null) {
+            try {
+                // 截图
+                byte[] screenshot = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.BYTES);
+                // 添加到 Allure 报告
+                Allure.addAttachment("失败截图", new ByteArrayInputStream(screenshot));
+            } catch (WebDriverException e) {
+                System.err.println("截图失败: " + e.getMessage());
+            }
+        }
     }
 }
