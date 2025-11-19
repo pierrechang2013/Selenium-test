@@ -1,4 +1,4 @@
-name: Allure Report
+name: Java CI with Allure
 
 on:
   push:
@@ -11,15 +11,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. 检出代码
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2. 设置 JDK 17
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: 17
           distribution: temurin
 
+      # 3. 缓存 Maven 仓库
       - name: Cache Maven packages
         uses: actions/cache@v3
         with:
@@ -28,16 +31,20 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Build and run tests
+      # 4. 运行测试并生成 Allure 报告
+      - name: Build, test and generate Allure report
         run: |
           mvn clean test
           mvn allure:report
 
+      # 5. 上传完整报告为 artifact
       - name: Upload Allure Report
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
           path: target/site/allure-maven/
+
+
 
 
 
