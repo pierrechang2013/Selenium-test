@@ -1,41 +1,42 @@
-name: Run Automated Tests
+name: UI Tests
 
-# 触发条件：push 到 test 分支或 PR 到 main
 on:
   push:
     branches:
-      - branch1
+      - branch20
   pull_request:
     branches:
-      - branch1
+      - branch20
 
 jobs:
-  build-and-test:
+  run-ui-tests:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ 拉取代码
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # 2️⃣ 配置 Java 环境
-      - name: Set up Java
-        uses: actions/setup-java@v3
+      - name: Setup JDK
+        uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: 17
+          distribution: 'temurin'
+          java-version: '17'
 
-      # 3️⃣ 编译项目
-      - name: Build project
-        run: mvn clean compile
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@latest
 
-      # 4️⃣ 运行测试
+      - name: Install ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+
       - name: Run tests
-        run: mvn test
+        run: mvn clean test
 
-      # 5️⃣ 上传测试报告
-      - name: Upload test results
+      - name: Generate Allure Report
+        run: mvn allure:report
+
+      - name: Upload Allure Report
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: target/surefire-reports/**/*.xml
+          name: allure-report
+          path: target/site/allure-maven-plugin
+
