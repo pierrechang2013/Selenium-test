@@ -37,6 +37,8 @@ public class TestPracticeForm extends BaseTest {
     public void testFillPracticeFormFirefox() {
         try {
             PracticeFormPage formPage = new PracticeFormPage("firefox");
+            formPage.open();
+
             formPage.enterFirstName("Alice");
             formPage.enterLastName("Smith");
             formPage.enterEmail("alice.smith@example.com");
