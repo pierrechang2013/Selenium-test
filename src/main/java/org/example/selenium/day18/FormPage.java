@@ -13,6 +13,31 @@ import java.time.Duration;
  */
 public class FormPage {
 
+    private final WebDriver webDriver;
+    private final By firstNameField = By.id("firstName");
+    private final By lastNameField = By.id("lastName");
+    private final By userEmailField = By.id("userEmail");
+    //private final By genderradioField1 = By.id("gender-radio-1");
+    private final By genderradioField1 = By.cssSelector("label[for='gender-radio-1']");
+    private final By genderradioField2 = By.id("gender-radio-2");
+    private final By genderradioField3 = By.id("gender-radio-3");
+    private final By userNumberField = By.id("userNumber");
+    private final By dateOfBirthField = By.id("dateOfBirthInput");
+    private final By subjectsField = By.id("subjectsInput");
+    private final By uploadPictureField = By.id("uploadPicture");
+    private final By currentAddressField = By.id("currentAddress");
+    private final By selectStateField = By.id("react-select-3-input");
+    private final By selectCityField = By.id("react-select-4-input");
+    private final By submitBtnField = By.id("submit");
+    //dialog还没写
+    private final By dialogTableField = By.cssSelector("table.table.table-dark.table-striped." +
+            "table-bordered.table-hover");
+    private final By rowsField = By.xpath("//tbody/tr");
+
+    public FormPage(WebDriver webDriver) {
+        this.webDriver = webDriver;
+    }
+
     public WebDriver getWebDriver() {
         return webDriver;
     }
@@ -69,100 +94,63 @@ public class FormPage {
         return selectCityField;
     }
 
-    private final WebDriver webDriver;
-    private final By firstNameField = By.id("firstName");
-    private final By lastNameField = By.id("lastName");
-
-    private final By userEmailField = By.id("userEmail");
-
-
-    //private final By genderradioField1 = By.id("gender-radio-1");
-    private final By genderradioField1 = By.cssSelector("label[for='gender-radio-1']");
-
-    private final By genderradioField2 = By.id("gender-radio-2");
-    private final By genderradioField3 = By.id("gender-radio-3");
-
-    private final By userNumberField = By.id("userNumber");
-
-    private final By dateOfBirthField = By.id("dateOfBirthInput");
-
-    private final By subjectsField = By.id("subjectsInput");
-
-    private final By uploadPictureField = By.id("uploadPicture");
-    private final By currentAddressField = By.id("currentAddress");
-
-    private final By selectStateField = By.id("react-select-3-input");
-
-    private final By selectCityField = By.id("react-select-4-input");
-
-    private final By submitBtnField = By.id("submit");
-
     public By getDialogTableField() {
         return dialogTableField;
     }
-
-    //dialog还没写
-    private final By dialogTableField = By.cssSelector("table.table.table-dark.table-striped." +
-            "table-bordered.table-hover");
 
     public By getRowsField() {
         return rowsField;
     }
 
-    private final By rowsField = By.xpath("//tbody/tr");
-
-
-    public FormPage(WebDriver webDriver) {
-        this.webDriver = webDriver;
-    }
-
     public void open() {
+
         webDriver.get("https://demoqa.com/automation-practice-form?utm_source=chatgpt.com");
     }
 
-    public void inputLastName(String lastName){
+    public void inputLastName(String lastName) {
         webDriver.findElement(firstNameField).sendKeys(lastName);
     }
 
-    public void inputFirstName(String lastName){
+    public void inputFirstName(String lastName) {
         webDriver.findElement(lastNameField).sendKeys(lastName);
     }
 
-    public void inputUserEmail(String userEmail){
+    public void inputUserEmail(String userEmail) {
         webDriver.findElement(userEmailField).sendKeys(userEmail);
     }
 
-    public void inputPhoNum(String phoNum){
+    public void inputPhoNum(String phoNum) {
         webDriver.findElement(userNumberField).sendKeys(phoNum);
     }
 
-    public String selectRadio1(){
+    public String selectRadio1() {
         webDriver.findElement(genderradioField1).click();
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", webDriver.findElement(genderradioField1));
 
         return webDriver.findElement(genderradioField1).getText();
     }
 
-    public String selectRadio2(){
+    public String selectRadio2() {
         return webDriver.findElement(genderradioField2).getAttribute("value");
     }
-    public String selectRadio3(){
+
+    public String selectRadio3() {
         return webDriver.findElement(genderradioField3).getAttribute("value");
     }
 
-    public void selectDate(String date){
+    public void selectDate(String date) {
         webDriver.findElement(dateOfBirthField).sendKeys(date);
     }
 
-    public void inputSubject(String subject){
+    public void inputSubject(String subject) {
         webDriver.findElement(subjectsField).sendKeys(subject);
     }
 
-    public void uploadPic(String file){
+    public void uploadPic(String file) {
         webDriver.findElement(uploadPictureField).sendKeys(file);
     }
 
-    public void  inputState(String state){
+    public void inputState(String state) {
         WebElement input = webDriver.findElement(this.selectStateField);
 
         // 滚动到元素可见
@@ -179,12 +167,12 @@ public class FormPage {
         WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
         By optionLocator = By.xpath("//div[contains(@class,'subjects-auto-complete__option') and text()='" + state + "']");
         WebElement option = wait.until(ExpectedConditions.elementToBeClickable(optionLocator));
-        
+
         // JS 点击下拉选项，避免遮挡
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", option);
     }
 
-    public void inputCity(String city){
+    public void inputCity(String city) {
         WebElement input = webDriver.findElement(this.selectCityField);
 
         // 滚动到元素可见
@@ -206,7 +194,7 @@ public class FormPage {
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", option);
     }
 
-    public void clickSubmitBtn(){
+    public void clickSubmitBtn() {
         WebElement element = webDriver.findElement(submitBtnField);
         try {
             element.click();
